@@ -2,6 +2,33 @@
 
 E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo para estudar e contribuir com anotações :3 🚀
 
+# Tópicos
+
+- [Bora estudar um Node 📚](#bora-estudar-um-node-)
+- [Tópicos](#tópicos)
+- [init](#init)
+- [Module](#module)
+  - [Exports](#exports)
+  - [Import](#import)
+  - [__fileName](#__filename)
+  - [__dirname](#__dirname)
+- [NPM - Node package manager](#npm---node-package-manager)
+  - [npm install](#npm-install)
+    - [Instalar como depencia](#instalar-como-depencia)
+    - [instalar em modo de desenvolvimento](#instalar-em-modo-de-desenvolvimento)
+    - [Mudar versões do modulo - Alternar em modulos para desenvolvimento e produção](#mudar-versões-do-modulo---alternar-em-modulos-para-desenvolvimento-e-produção)
+    - [npm update](#npm-update)
+    - [npm unistall](#npm-unistall)
+    - [npm ls](#npm-ls)
+    - [npm outdated](#npm-outdated)
+- [packge.json](#packgejson)
+- [fs - File System](#fs---file-system)
+  - [Lendo o conteudo de um arquivo](#lendo-o-conteudo-de-um-arquivo)
+  - [Escrevendo conteudo em arquivos](#escrevendo-conteudo-em-arquivos)
+  - [Listar arquivos em pastas](#listar-arquivos-em-pastas)
+  - [caminhando nas pastas](#caminhando-nas-pastas)
+  - [Lendo pastas](#lendo-pastas)
+
 # init
 
 Inicializar o package.json
