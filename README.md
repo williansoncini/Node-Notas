@@ -28,6 +28,16 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
   - [Listar arquivos em pastas](#listar-arquivos-em-pastas)
   - [caminhando nas pastas](#caminhando-nas-pastas)
   - [Lendo pastas](#lendo-pastas)
+- [Express](#express)
+  - [instalação](#instalação)
+  - [Configuração padrão](#configuração-padrão)
+  - [Requisições básicas](#requisições-básicas)
+  - [Requisições com parametros](#requisições-com-parametros)
+  - [Requisições com query](#requisições-com-query)
+  - [Requisições com body](#requisições-com-body)
+- [Nodemon](#nodemon)
+  - [instalação](#instalação-1)
+  - [configuração package.json](#configuração-packagejson)
 
 # init
 
@@ -160,7 +170,6 @@ Listar pacotes desatualizados
 npm outdated 
 ```
 
-
 # packge.json
 
 > ^ na frente de uma dependencia, significa que essa dependencia sempre pegara a versão mais atual do modulo do terceiro
@@ -252,3 +261,100 @@ const path = require('path')
 const files = fs.readdir(__dirname) // arquivos da pasta
 ```
 
+# Express
+
+## instalação
+
+```js
+npm i express
+```
+
+## Configuração padrão
+
+```js
+const express = require('express')
+const app = express()
+
+app.liste(port_number, () => console.log('O pai ta on!'))
+```
+
+## Requisições básicas
+
+```js
+const express = require('express')
+const app = express()
+
+app.get('/route', (req, res) => { })
+app.post('/route', (req, res) => { })
+app.put('/route', (req, res) => { })
+app.delete('/route', (req, res) => { })
+
+app.listen(port_number, () => console.log('O pai ta on!'))
+```
+
+## Requisições com parametros
+
+> Pode-se incluir um ? para indicar como parametro opcional
+
+```js
+const express = require('express')
+const app = express()
+
+app.get('/:parameter', (req, res) => {
+  console.log(req.params)
+  console.log(req.params.parameter)
+})
+//Exemplo parametro opcional
+app.get('/:parameter?', (req,res) => {} )
+app.listen(port_number, () => console.log('O pai ta on!'))
+```
+
+## Requisições com query
+
+```js
+const express = require('express')
+const app = express()
+
+// url: http://localhost:3000/?teste_um=valor_um&teste_dois=valor_dois
+
+app.get('/', (req, res) => {
+  console.log(req.query) // { teste_um : valor_um, teste_dois: valor_dois}
+  console.log(req.query.teste_um) // valor_um
+})
+
+app.listen(port_number, () => console.log('O pai ta on!'))
+```
+
+## Requisições com body
+
+```js
+const express = require('express')
+const app = express()
+
+app.use(express.urlencoded({extended: true}))
+
+//body enviado: {teste: 'teste'}
+
+app.post('/route', (req, res) => {
+  console.log(req.body) // { teste: 'teste'}
+  console.log(req.body.teste)
+})
+```
+
+# Nodemon
+
+Usado em ambiante de desenvolvimento para tornar automatico o reload do node.
+
+## instalação
+
+```js
+npm i nodemon --save-dev
+```
+
+## configuração package.json
+
+```json
+"scripts": {
+  "start" : "npx nodemon server.js"
+}
+```
