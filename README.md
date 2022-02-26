@@ -35,6 +35,17 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
   - [Requisições com parametros](#requisições-com-parametros)
   - [Requisições com query](#requisições-com-query)
   - [Requisições com body](#requisições-com-body)
+  - [Rotas](#rotas)
+  - [Controllers](#controllers)
+  - [Express Views](#express-views)
+    - [Instalação ejs](#instalação-ejs)
+    - [Configuração básica](#configuração-básica)
+    - [Arquivo da view - index.ejs](#arquivo-da-view---indexejs)
+    - [Rendezirar uma view](#rendezirar-uma-view)
+  - [Arquivos estáticos](#arquivos-estáticos)
+  - [Express middleware](#express-middleware)
+    - [Middleware](#middleware)
+    - [Global middleware](#global-middleware)
 - [Nodemon](#nodemon)
   - [instalação](#instalação-1)
   - [configuração package.json](#configuração-packagejson)
@@ -339,6 +350,130 @@ app.post('/route', (req, res) => {
   console.log(req.body) // { teste: 'teste'}
   console.log(req.body.teste)
 })
+```
+
+## Rotas 
+
+Escopo básico de um arquivo de rotas
+
+```js
+const express = require("express")
+const router = express.Router()
+
+router.get('/', homeController.homePage)
+
+module.exports = router
+```
+
+## Controllers
+
+Escopo básico de arquivo controlador
+
+```js
+exports.homeController = (req, res) => {
+  //logic
+  res.send('Mensagem')
+}
+```
+
+## Express Views
+
+Views são utilizadas para renderizar templates html
+
+> Existem várias engines que podem ser utilizadas
+
+### Instalação ejs
+
+```js
+npm i ejs
+```
+
+### Configuração básica
+
+```js
+const path = require('path')
+const express = require('express')
+const app = express()
+
+
+// Setar o local que ficaram as views. 
+// app.set('views', './path/views')
+// Para uma melhor segurança é melhor utilizadar path.resolve
+app.set('views', path.resolve(__dirname, 'src', 'views'))
+
+// Setar qual view engine será utilizada
+app.set('view engine', 'ejs')
+```
+
+### Arquivo da view - index.ejs
+
+É um tipo de arquivo que aceita HTML e trechos JavaScript
+
+> A extensão do arquivo deve ter .ejs
+
+### Rendezirar uma view
+
+```js
+exports.homePage = (req, res) => {
+  res.render('index')
+}
+```
+
+## Arquivos estáticos
+
+Podemos definir uma pasta para os arquivos estáticos da aplicação
+
+```js
+const path = require('path')
+const express = require('express')
+const app = express()
+
+app.use(express.static(__dirname, 'public'))
+// app.use(express.static('./public'))
+```
+
+## Express middleware
+
+Um middleware é um intermediario que acontece quando você recebe uma requisição. Pode ser um middleware checando se o usuário está logado ou se o usuário tem permissão para realizar oque está requisitando
+
+> Middlewares tem a função next, que permite passar para a próximo middleware ou controller.
+
+> Pode exister mais de um middleware
+
+### Middleware
+
+```js
+const express = require('express')
+const app = express()
+
+const middleware = (req, res, next) => {
+  console.log('Sou um middleware')
+  next()
+}
+
+app.get('/', middleware, homeController.homePage)
+
+app.listen(3000)
+```
+
+### Global middleware
+
+Quando configurado, todas as requisições vão passar por este middleware
+
+```js
+const express = require('express')
+const app = express()
+
+const middleware = (req, res, next) => {
+  //logic
+  next()
+}
+
+app.use('middleware', middleware)
+
+app.get('/', homeControlle.homePage) // Ira passar pelo middleware global
+
+app.listen(3000)
 ```
 
 # Nodemon
