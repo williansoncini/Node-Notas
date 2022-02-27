@@ -46,9 +46,18 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
   - [Express middleware](#express-middleware)
     - [Middleware](#middleware)
     - [Global middleware](#global-middleware)
+  - [Flash messages](#flash-messages)
 - [Nodemon](#nodemon)
   - [instalação](#instalação-1)
   - [configuração package.json](#configuração-packagejson)
+- [Dotenv](#dotenv)
+  - [Instalação](#instalação-2)
+  - [Inicializando o dotenv](#inicializando-o-dotenv)
+  - [Utilizando variáveis de ambiente](#utilizando-variáveis-de-ambiente)
+- [mongoose](#mongoose)
+  - [Conexão](#conexão)
+    - [Exemplo de conexão em conjunto com Express](#exemplo-de-conexão-em-conjunto-com-express)
+- [Express-session + Connect-mongo](#express-session--connect-mongo)
 
 # init
 
@@ -476,6 +485,29 @@ app.get('/', homeControlle.homePage) // Ira passar pelo middleware global
 app.listen(3000)
 ```
 
+## Flash messages
+
+Mensagens que só podem ser vistas uma vez. Ótimas para informar algo ao usuário e depois desaparecer na tela se ele recarregar a página
+
+```js
+const express = require('express')
+const flash = require('connect-flash')
+
+const app = express()
+app.use(flash())
+
+// Adicionando uma mensagem a requisição
+// Assim que o usuário a ver, ela será deletada
+app.get('/', (req, res) => {
+  req.flash('mensagem': 'conteudo da mensagem')
+  // Para visualizar a mensagem por aqui (Retorna um Array)
+  // req.flash('mensagem') - ['conteudo da mensagem']
+  res.send('resposta')
+})
+
+app.listen(3000, () => console.log('O pai ta on!'))
+```
+
 # Nodemon
 
 Usado em ambiante de desenvolvimento para tornar automatico o reload do node.
@@ -492,4 +524,94 @@ npm i nodemon --save-dev
 "scripts": {
   "start" : "npx nodemon server.js"
 }
+```
+
+# Dotenv
+
+## Instalação
+
+```js
+npm i dotenv
+```
+
+## Inicializando o dotenv
+
+```js
+require('dotenv').config()
+```
+
+## Utilizando variáveis de ambiente
+
+```js
+process.env.VARIABLE_ENV
+// Exemplo
+const name = process.env.NAME_ENV
+```
+
+# mongoose
+
+Banco de dados não relacional. Para fazer alguns teste, existe o mongo atlas que tem uma versão free até 512 mb :3
+
+```js
+npm i mongoose
+```
+
+## Conexão
+
+> retorna uma promisse
+
+```js
+const mongoose = require("mongoose")
+mongoose.connect(CONNECTION_STRING)
+  .then()
+  .catch()
+```
+
+### Exemplo de conexão em conjunto com Express
+
+Antes do servidor ficar em pé, é necessário certificar que a conexão com o banco de dados está ativa. Estou fazendo aqui para o banco de dados, mas poderia ser para qualquer tipo de cois
+
+```js
+require('dotenv').config()
+const express = require('express')
+const mongoose = require('mongoose')
+
+const app = express()
+mongoose.connect(process.env.CONNECTION_STRING)
+  .then(() => app.emit('pronto'))
+  .catch(e => console.log(e))
+
+app.on('pronto', () => {
+  app.listen(3000, () => console.log('O pai ta on'))
+})
+```
+
+# Express-session + Connect-mongo
+
+Guardando a seção do usuário no mongo, fazendo isso em conjunto com o Express. Suuuuuper maneiro
+
+Configuração básica
+
+```js
+require('dotenv').config()
+const express = require('express')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+
+const app = express()
+
+const sessionOptions = session({
+  secret: "pode ser qualquer coisa !#$%!2341234!2345123$!@#414556$%TGSDFgsdfq1@#$dfq",
+  store: MongoStore.create({ mongoUrl: process.env.CONNECTION_STRING}),
+  resave: false,
+  saveUnitialized: false,
+  cookie {
+    // 7 dias
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true
+  }
+})
+
+app.use(sessionOptions)
+app.listen(3000, () => console.log('O pai ta on!'))
 ```
