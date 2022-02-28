@@ -42,6 +42,7 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
     - [Configuração básica](#configuração-básica)
     - [Arquivo da view - index.ejs](#arquivo-da-view---indexejs)
     - [Rendezirar uma view](#rendezirar-uma-view)
+    - [Sintaxe](#sintaxe)
   - [Arquivos estáticos](#arquivos-estáticos)
   - [Express middleware](#express-middleware)
     - [Middleware](#middleware)
@@ -58,6 +59,13 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
   - [Conexão](#conexão)
     - [Exemplo de conexão em conjunto com Express](#exemplo-de-conexão-em-conjunto-com-express)
 - [Express-session + Connect-mongo](#express-session--connect-mongo)
+- [Helmet](#helmet)
+  - [Instalação](#instalação-3)
+  - [Configuração básica com express](#configuração-básica-com-express)
+- [CSRF - Cross-site request forgety](#csrf---cross-site-request-forgety)
+  - [Instalação](#instalação-4)
+  - [Configuração básico com express](#configuração-básico-com-express)
+  - [Configurações de middlewares csrf](#configurações-de-middlewares-csrf)
 
 # init
 
@@ -428,6 +436,28 @@ exports.homePage = (req, res) => {
 }
 ```
 
+### Sintaxe
+
+Para se usar JavaScript junto do HTML utilizando o EJS é necessário seguir sua sintaxe:
+
+```html
+<body>
+  <% Controle de fluxo (if, for...) %>
+  <%= Imprime escapando caracteres %>
+  <%- Não Imprime escapando caracteres %>
+  <# Comentário >
+  <%- include('caminho/arquivo') %>
+</body>
+```
+
+Você sempre precisa abrir e fechar as tag do ejs, exemplo com controle de fluxo
+
+```html
+<% for(let i=0; i < length; i++>) {%>
+  <% console.log(i) %>
+<% } %>
+```
+
 ## Arquivos estáticos
 
 Podemos definir uma pasta para os arquivos estáticos da aplicação
@@ -500,7 +530,7 @@ app.use(flash())
 // Assim que o usuário a ver, ela será deletada
 app.get('/', (req, res) => {
   req.flash('mensagem': 'conteudo da mensagem')
-  // Para visualizar a mensagem por aqui (Retorna um Array)
+  // Para visualizar a mensagem por aqui (Retorna um Array')
   // req.flash('mensagem') - ['conteudo da mensagem']
   res.send('resposta')
 })
@@ -613,5 +643,77 @@ const sessionOptions = session({
 })
 
 app.use(sessionOptions)
+app.listen(3000, () => console.log('O pai ta on!'))
+```
+
+# Helmet
+
+## Instalação
+
+> Não é indicado para ambientes de testes sem SSL
+
+```js
+npm i helmet
+```
+
+## Configuração básica com express
+
+```js
+const helmet = require('hemet')
+const express = require('express')
+
+const app = express()
+app.use(helmet())
+
+app.listen(3000, () => console.log('O pai ta on!'))
+```
+
+# CSRF - Cross-site request forgety
+
+## Instalação
+
+```js
+npm i csurf
+```
+
+## Configuração básico com express
+
+```js
+const express = require('express')
+const csurf = require('csurf')
+
+const app = express()
+app.use(csurf())
+
+app.listen(3000, console.log('O pai ta on!'))
+```
+
+## Configurações de middlewares csrf
+
+`csrfMiddlewares.js`
+
+```js
+exports.checkCsrfError = (err, req, res, next) => {
+  if (err && 'EBADCSRFTOKEN' === err.code){
+    return res.render('errorPage')
+  }
+}
+
+exports.csrfMiddleware = (req, res, next) => {
+  req.locals.csrfToken = req.csrfToken()
+  next()
+}
+```
+
+`server.js`
+
+```js
+const express = require('express')
+const { checkCsrfError, csrfMiddleware} = require('middlewares/csrfMiddlewares')
+
+const app = express()
+app.use(checkCsrfError)
+app.use(csrfMiddleware)
+
 app.listen(3000, () => console.log('O pai ta on!'))
 ```
