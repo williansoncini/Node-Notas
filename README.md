@@ -66,6 +66,17 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
   - [Instalação](#instalação-4)
   - [Configuração básico com express](#configuração-básico-com-express)
   - [Configurações de middlewares csrf](#configurações-de-middlewares-csrf)
+- [Sucrase](#sucrase)
+  - [Instalação](#instalação-5)
+  - [Configuração](#configuração)
+- [Sequelize](#sequelize)
+  - [Instalação](#instalação-6)
+  - [Configuração](#configuração-1)
+  - [Migrations](#migrations)
+    - [Criar migration](#criar-migration)
+    - [Arquivo de migração (Exemplo)](#arquivo-de-migração-exemplo)
+    - [Aplicar migration](#aplicar-migration)
+    - [Desfazer migration](#desfazer-migration)
 
 # init
 
@@ -716,4 +727,97 @@ app.use(checkCsrfError)
 app.use(csrfMiddleware)
 
 app.listen(3000, () => console.log('O pai ta on!'))
+```
+
+# Sucrase
+
+Utilizado para permitir import e export do JavaScript no node.
+
+## Instalação
+
+```js
+npm i sucrase --save-dev
+```
+
+## Configuração
+
+Aqui no caso está sendo feita dentro no nodemon.json
+
+```js
+{
+  "execMap": {
+    "js" : "node -r sucrase/register"
+  }
+}
+```
+
+# Sequelize
+
+Faz o controle da base de dados através de migrations.
+
+## Instalação
+
+```js
+npm i sequelize
+npm i -D sequelize-cli
+```
+
+## Configuração
+
+Arquivo `.sequelizerc`
+
+```js
+const { resolve } = require('path')
+
+module.exports = {
+  config: resolve(__dirname, 'src', 'config', 'database.js'),
+  'models-path': resolve(__dirname, 'src', 'models'),
+  'migrations-path': resolve(__dirname, 'src', 'database', 'migrations'),
+  'seeders-path': resolve(__dirname, 'src', 'database', 'seeds'),
+}
+```
+
+## Migrations 
+
+### Criar migration
+
+```js
+npx sequelize migration:create --name=table_name
+```
+
+### Arquivo de migração (Exemplo)
+
+```js
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    return queryInterface.createTable('tableName', {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      nome: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+    });
+  },
+
+  async down(queryInterface, Sequelize) {
+    return queryInterface.dropTable('tableName');
+  },
+};
+```
+
+### Aplicar migration
+
+```js
+npx sequelize db:migrate
+```
+
+### Desfazer migration
+
+```js
+npx sequelize :db:migrate:undo
 ```
