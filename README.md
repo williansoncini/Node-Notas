@@ -77,6 +77,14 @@ E ai beleza? Esse é meu repositório de anotações de node. Sinta-se bem vindo
     - [Arquivo de migração (Exemplo)](#arquivo-de-migração-exemplo)
     - [Aplicar migration](#aplicar-migration)
     - [Desfazer migration](#desfazer-migration)
+  - [Criando seeds](#criando-seeds)
+  - [Exemplo de seed](#exemplo-de-seed)
+  - [Aplicando o seed](#aplicando-o-seed)
+- [JWT - Json Web Token](#jwt---json-web-token)
+  - [Instalação](#instalação-7)
+  - [](#)
+- [Multer - Upload de arquivos](#multer---upload-de-arquivos)
+  - [Instalação](#instalação-8)
 
 # init
 
@@ -137,7 +145,6 @@ Variavel padrão do node
 Variavél padrão do nome
 
 > Retorna o caminho absoluto da pasta
-
 
 # NPM - Node package manager
 
@@ -380,7 +387,7 @@ app.post('/route', (req, res) => {
 })
 ```
 
-## Rotas 
+## Rotas
 
 Escopo básico de um arquivo de rotas
 
@@ -777,7 +784,7 @@ module.exports = {
 }
 ```
 
-## Migrations 
+## Migrations
 
 ### Criar migration
 
@@ -820,4 +827,64 @@ npx sequelize db:migrate
 
 ```js
 npx sequelize :db:migrate:undo
+```
+
+## Criando seeds
+
+```js
+npx sequelize seed:generate --name name-seed
+```
+
+## Exemplo de seed
+
+```js
+const bcryptjs = require('bcryptjs');
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => queryInterface.bulkInsert(
+    'users',
+    [
+      {
+        name: 'Albert',
+        email: 'Albert@gmail.com',
+        password_hash: await bcryptjs.hashSync('123456', 8),
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        name: 'Nikola', 
+        email: 'Nikola@gmail.com',
+        password_hash: await bcryptjs.hashSync('123456', 8),
+        created_at: new Date(),
+        updated_at: new Date(), 
+      },
+    ],
+  ),
+
+  async down() {},
+};
+```
+
+## Aplicando o seed
+
+```js
+npx sequelize db:seed:all
+```
+
+# JWT - Json Web Token
+
+## Instalação
+
+```js
+npm i jsonwebtoken
+```
+
+## 
+
+# Multer - Upload de arquivos
+
+## Instalação
+
+```js
+npm i multer
 ```
