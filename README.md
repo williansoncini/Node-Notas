@@ -470,10 +470,10 @@ Para se usar JavaScript junto do HTML utilizando o EJS é necessário seguir sua
 
 Você sempre precisa abrir e fechar as tag do ejs, exemplo com controle de fluxo
 
-```text
-<% for(let i=0; i < length; i++>) {%>
+```html
+<% for(let i=0; i < length; i++) {%>
   <% console.log(i) %>
-<%} %>
+<% } %>
 ```
 
 ## Arquivos estáticos
