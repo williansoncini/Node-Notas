@@ -473,7 +473,7 @@ Você sempre precisa abrir e fechar as tag do ejs, exemplo com controle de fluxo
 ```html
 <% for(let i=0; i < length; i++>) {%>
   <% console.log(i) %>
-<% } %>
+<%} %>
 ```
 
 ## Arquivos estáticos
